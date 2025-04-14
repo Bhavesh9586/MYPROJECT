@@ -1,0 +1,483 @@
+{% extends 'wedding_app/base.html' %}
+{% load static %}
+
+{% block title %}Invitation Designs - Victory Invitations{% endblock %}
+
+{% block content %}
+<!-- Breadcrumb -->
+<div class="container mt-4 mb-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            {% if current_category %}
+                <li class="breadcrumb-item"><a href="{% url 'gallery' %}">Gallery</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ current_category|title }}</li>
+            {% else %}
+                <li class="breadcrumb-item active" aria-current="page">Gallery</li>
+            {% endif %}
+        </ol>
+    </nav>
+</div>
+
+<!-- Product Grid Section -->
+<section class="product-grid-section py-3">
+    <div class="container">
+        {% csrf_token %}
+        <div class="row">
+            <!-- Filters Column -->
+            <div class="col-lg-3 d-none d-lg-block">
+                <div class="filter-sidebar">
+                    <form id="filterForm" method="get" action="{% url 'gallery' %}">
+                        <div class="filter-box mb-4">
+                            <h5 class="filter-heading">Categories</h5>
+                            <ul class="list-unstyled filter-list">
+                                <li>
+                                    <a href="{% url 'gallery' %}" class="{% if not current_category %}active{% endif %}">
+                                        All Categories <span>({{ page_obj.paginator.count }})</span>
+                                    </a>
+                                </li>
+                                {% for category in categories %}
+                                <li>
+                                    <a href="{% url 'gallery' %}?category={{ category.slug }}" class="{% if current_category == category.slug %}active{% endif %}">
+                                        {{ category.name }} <span>({% with count=category_counts %}
+                                        {% if count %}
+                                        {% for slug, num in count.items %}
+                                        {% if slug == category.slug %}{{ num }}{% endif %}
+                                        {% endfor %}
+                                        {% else %}0{% endif %}
+                                        {% endwith %})</span>
+                                    </a>
+                                </li>
+                                {% empty %}
+                                <li><a href="#">Wedding <span>(0)</span></a></li>
+                                <li><a href="#">Baby Shower <span>(0)</span></a></li>
+                                <li><a href="#">Engagement <span>(0)</span></a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        
+                        <div class="filter-box mb-4">
+                            <h5 class="filter-heading">Price</h5>
+                            <div class="price-range-slider">
+                                <input type="range" min="0" max="5000" value="{{ max_price|default:'2500' }}" class="form-range" id="priceRange" name="max_price">
+                                <input type="hidden" name="min_price" value="0">
+                                <div class="price-labels d-flex justify-content-between">
+                                    <span>₹0</span>
+                                    <span>₹5000</span>
+                                </div>
+                                <div class="price-value mt-2">
+                                    Price: <span id="priceValue">₹{{ max_price|default:'2500' }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-box mb-4">
+                            <h5 class="filter-heading">Format</h5>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="PSD" id="psdFormat" name="format" {% if 'PSD' in selected_formats %}checked{% endif %}>
+                                <label class="form-check-label" for="psdFormat">
+                                    PSD File <span>({{ format_types.PSD|default:'0' }})</span>
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Canva" id="canvaFormat" name="format" {% if 'Canva' in selected_formats %}checked{% endif %}>
+                                <label class="form-check-label" for="canvaFormat">
+                                    Canva Template <span>({{ format_types.Canva|default:'0' }})</span>
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="PDF" id="pdfFormat" name="format" {% if 'PDF' in selected_formats %}checked{% endif %}>
+                                <label class="form-check-label" for="pdfFormat">
+                                    PDF File <span>({{ format_types.PDF|default:'0' }})</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-box mb-4">
+                            <h5 class="filter-heading">Color</h5>
+                            <div class="color-options">
+                                <div class="color-option" style="background-color: #f9d5e5;"></div>
+                                <div class="color-option" style="background-color: #d1e5f9;"></div>
+                                <div class="color-option" style="background-color: #f9e9d1;"></div>
+                                <div class="color-option" style="background-color: #e5f9d1;"></div>
+                                <div class="color-option" style="background-color: #d1f9e9;"></div>
+                                <div class="color-option active" style="background-color: #f9d1d1;"></div>
+                                <div class="color-option" style="background-color: #d5d5d5;"></div>
+                                <div class="color-option" style="background-color: #ffffff; border: 1px solid #ddd;"></div>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                        <a href="{% url 'gallery' %}" class="btn btn-outline-secondary w-100 mt-2">Clear Filters</a>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Products Column -->
+            <div class="col-lg-9">
+                <!-- Filter Controls -->
+                <div class="product-filters mb-4">
+                    <div class="d-flex align-items-center">
+                        <span class="me-2">Show:</span>
+                        <select class="form-select form-select-sm me-3" style="width: 60px;" id="itemsPerPage">
+                            <option value="9">9</option>
+                            <option value="12" selected>12</option>
+                            <option value="24">24</option>
+                            <option value="36">36</option>
+                        </select>
+                    </div>
+                    <div class="view-options ms-auto">
+                        <span class="me-2">View:</span>
+                        <button class="btn active" data-view="grid"><i class="fas fa-th"></i></button>
+                        <button class="btn" data-view="list"><i class="fas fa-list"></i></button>
+                    </div>
+                </div>
+                
+                <!-- Products Grid -->
+                <div class="row">
+                    {% if page_obj %}
+                        {% for image in page_obj %}
+                            <div class="col-md-4 mb-4">
+                                <div class="product-card">
+                                    <div class="product-image">
+                                        <img src="{{ image.image.url }}" alt="{{ image.title }}" class="img-fluid">
+                                        <div class="product-overlay">
+                                            <div class="product-actions">
+                                                <a href="#" class="btn quick-view" data-bs-toggle="modal" data-bs-target="#quickViewModal" data-id="{{ image.id }}">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="#" class="btn add-to-cart" data-id="{{ image.id }}">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                </a>
+                                                <a href="#" class="btn add-to-wishlist">
+                                                    <i class="fas fa-heart"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-title">
+                                            <a href="{% url 'invitation_preview' 1 %}">{{ image.title }}</a>
+                                        </h3>
+                                        <div class="product-price">
+                                            {% if image.discount_price %}
+                                                <span class="original-price">₹{{ image.price }}</span>
+                                                <span>₹{{ image.discount_price }}</span>
+                                            {% else %}
+                                                <span>₹{{ image.price }}</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="col-12 text-center py-5">
+                            <div class="empty-results">
+                                <i class="fas fa-search mb-3" style="font-size: 3rem; color: #ddd;"></i>
+                                <h3>No Designs Found</h3>
+                                <p class="text-muted">We couldn't find any designs matching your filters.</p>
+                                <a href="{% url 'gallery' %}" class="btn btn-primary mt-3">Clear Filters</a>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Pagination -->
+                {% if page_obj.paginator.num_pages > 1 %}
+                <div class="pagination-container mt-4">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}{% for format in selected_formats %}&format={{ format }}{% endfor %}" tabindex="-1">Previous</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                            </li>
+                            {% endif %}
+                            
+                            {% for i in page_obj.paginator.page_range %}
+                                {% if page_obj.number == i %}
+                                    <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+                                {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ i }}{% if current_category %}&category={{ current_category }}{% endif %}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}{% for format in selected_formats %}&format={{ format }}{% endfor %}">{{ i }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}{% for format in selected_formats %}&format={{ format }}{% endfor %}">Next</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" aria-disabled="true">Next</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick View Modal -->
+<div class="modal fade" id="quickViewModal" tabindex="-1" aria-labelledby="quickViewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="quickViewModalLabel">Quick View</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <img src="" id="quickViewImage" class="img-fluid" alt="Product Image">
+                    </div>
+                    <div class="col-md-6">
+                        <h3 id="quickViewTitle">Product Title</h3>
+                        <div class="product-price mb-3" id="quickViewPrice">₹499.00</div>
+                        <p id="quickViewDescription">Beautiful baby shower invitation design with editable text. Available in PSD and Canva format.</p>
+                        
+                        <div class="product-options mb-3">
+                            <label>Format:</label>
+                            <div class="btn-group" role="group">
+                                <input type="radio" class="btn-check" name="format" id="psdFormatOption" autocomplete="off" checked>
+                                <label class="btn btn-outline-secondary" for="psdFormatOption">PSD</label>
+                                
+                                <input type="radio" class="btn-check" name="format" id="canvaFormatOption" autocomplete="off">
+                                <label class="btn btn-outline-secondary" for="canvaFormatOption">Canva</label>
+                            </div>
+                        </div>
+                        
+                        <div class="quantity-control mb-3">
+                            <label>Quantity:</label>
+                            <div class="input-group" style="width: 130px;">
+                                <button class="btn btn-outline-secondary" type="button" id="decreaseQuantity">-</button>
+                                <input type="text" class="form-control text-center" value="1" id="quantityInput">
+                                <button class="btn btn-outline-secondary" type="button" id="increaseQuantity">+</button>
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button type="button" class="btn btn-primary mb-2 w-100">Add to Cart</button>
+                            <button type="button" class="btn btn-outline-primary w-100">Buy Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Filter Sidebar Styles */
+    .filter-sidebar {
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+    }
+    
+    .filter-heading {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .filter-list li {
+        margin-bottom: 10px;
+    }
+    
+    .filter-list a {
+        color: #333;
+        text-decoration: none;
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .filter-list a.active {
+        color: var(--primary-color);
+        font-weight: 500;
+    }
+    
+    .filter-list a span {
+        color: #999;
+        font-size: 0.85rem;
+    }
+    
+    .color-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .color-option {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+    
+    .color-option.active {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 2px;
+    }
+    
+    /* Price Range Slider */
+    .price-labels {
+        font-size: 0.8rem;
+        color: #666;
+        margin-top: 5px;
+    }
+    
+    .price-value {
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+    
+    /* Product Card Styles */
+    .product-card:hover .product-overlay {
+        opacity: 1;
+    }
+    
+    .product-price .original-price {
+        text-decoration: line-through;
+        color: #999;
+        margin-right: 8px;
+        font-size: 0.9em;
+    }
+    
+    /* Quick View Modal Styles */
+    #quickViewImage {
+        max-height: 400px;
+        object-fit: cover;
+    }
+    
+    /* Empty results message */
+    .empty-results {
+        padding: 40px 0;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Price range slider
+        $('#priceRange').on('input', function() {
+            $('#priceValue').text('₹' + $(this).val());
+        });
+        
+        // Quick view modal functionality
+        $('.quick-view').click(function() {
+            var productId = $(this).data('id');
+            var productImg = $(this).closest('.product-card').find('img').attr('src');
+            var productTitle = $(this).closest('.product-card').find('.product-title a').text();
+            var productPrice = $(this).closest('.product-card').find('.product-price').text();
+            
+            $('#quickViewImage').attr('src', productImg);
+            $('#quickViewTitle').text(productTitle);
+            $('#quickViewPrice').text(productPrice);
+            
+            // In a real application, you would fetch additional product details via AJAX
+            $.ajax({
+                url: '/api/product/' + productId,
+                type: 'GET',
+                success: function(data) {
+                    // Uncomment and use when API is ready
+                    // $('#quickViewDescription').text(data.description);
+                },
+                error: function(error) {
+                    console.log('Error fetching product details', error);
+                }
+            });
+        });
+        
+        // Items per page change
+        $('#itemsPerPage').change(function() {
+            var urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('per_page', $(this).val());
+            window.location.search = urlParams.toString();
+        });
+        
+        // Quantity control
+        $('#increaseQuantity').click(function() {
+            var value = parseInt($('#quantityInput').val());
+            $('#quantityInput').val(value + 1);
+        });
+        
+        $('#decreaseQuantity').click(function() {
+            var value = parseInt($('#quantityInput').val());
+            if (value > 1) {
+                $('#quantityInput').val(value - 1);
+            }
+        });
+        
+        // Color options
+        $('.color-option').click(function() {
+            $('.color-option').removeClass('active');
+            $(this).addClass('active');
+        });
+        
+        // View options (grid/list)
+        $('.view-options .btn').click(function() {
+            $('.view-options .btn').removeClass('active');
+            $(this).addClass('active');
+            
+            var view = $(this).data('view');
+            if (view === 'list') {
+                $('.product-card').addClass('list-view');
+            } else {
+                $('.product-card').removeClass('list-view');
+            }
+        });
+        
+        // Add to cart functionality
+        $('.add-to-cart').click(function(e) {
+            e.preventDefault();
+            var productId = $(this).data('id');
+            
+            // Add product to cart using AJAX
+            $.ajax({
+                url: '/add-to-cart/' + productId + '/',
+                type: 'POST',
+                data: {
+                    'quantity': 1,
+                    'format': 'PSD',
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                },
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                success: function(data) {
+                    // Show success message
+                    alert('Product added to cart successfully!');
+                    
+                    // Update cart count if needed
+                    if (data.cart_count) {
+                        $('.cart-icon .badge').text(data.cart_count);
+                        if ($('.cart-icon .badge').hasClass('d-none')) {
+                            $('.cart-icon .badge').removeClass('d-none');
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // If not logged in, redirect to login page
+                    if (xhr.status === 403) {
+                        window.location.href = '/login/?next=' + window.location.pathname;
+                    } else {
+                        alert('Error adding product to cart. Please try again.');
+                    }
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

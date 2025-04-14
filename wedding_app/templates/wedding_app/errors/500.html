@@ -1,0 +1,41 @@
+{% extends 'wedding_app/base.html' %}
+{% load static %}
+
+{% block title %}Server Error - 500 Error{% endblock %}
+
+{% block content %}
+<div class="container my-5 py-5 text-center">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="error-page mb-4">
+                <h1 class="display-1 text-danger"><i class="fas fa-exclamation-triangle"></i></h1>
+                <h2 class="display-4">500 - Server Error</h2>
+                <p class="lead text-muted">Sorry, something went wrong on our end.</p>
+            </div>
+            
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h3>What happened?</h3>
+                    <p>Our server encountered an unexpected error while processing your request. Our technical team has been automatically notified and is working to fix the issue.</p>
+                    
+                    <h3>What can you do?</h3>
+                    <ul class="text-start">
+                        <li>Refresh the page and try again</li>
+                        <li>Try again later - the issue may be temporary</li>
+                        <li>Contact us if the problem persists</li>
+                    </ul>
+                    
+                    <div class="mt-4">
+                        <a href="{% url 'home' %}" class="btn btn-outline-primary me-2">
+                            <i class="fas fa-home me-2"></i>Go to Homepage
+                        </a>
+                        <a href="{% url 'contact' %}" class="btn btn-primary">
+                            <i class="fas fa-envelope me-2"></i>Contact Support
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

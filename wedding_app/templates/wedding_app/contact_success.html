@@ -1,0 +1,95 @@
+{% extends 'wedding_app/base.html' %}
+{% load static %}
+
+{% block title %}Message Sent - Victory Invitations{% endblock %}
+
+{% block content %}
+<!-- Success Page Section -->
+<section class="success-section py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <div class="success-card">
+                    <div class="success-icon mb-4">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h1 class="display-4 mb-4">Thank You!</h1>
+                    <p class="lead mb-4">Your message has been sent successfully. We appreciate your interest and will get back to you shortly.</p>
+                    
+                    <div class="next-steps mt-5">
+                        <h5 class="mb-3">While you wait...</h5>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="suggestion-card">
+                                    <i class="fas fa-images"></i>
+                                    <h6>Browse Designs</h6>
+                                    <a href="{% url 'gallery' %}" class="btn btn-sm btn-outline-primary">View Gallery</a>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="suggestion-card">
+                                    <i class="fas fa-star"></i>
+                                    <h6>Read Reviews</h6>
+                                    <a href="{% url 'testimonials' %}" class="btn btn-sm btn-outline-primary">Testimonials</a>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="suggestion-card">
+                                    <i class="fas fa-home"></i>
+                                    <h6>Return Home</h6>
+                                    <a href="{% url 'home' %}" class="btn btn-sm btn-outline-primary">Homepage</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-info mt-5">
+                        <p class="mb-1">If you need immediate assistance, please contact us directly:</p>
+                        <p class="mb-1"><i class="fas fa-phone me-2"></i> +1 (123) 456-7890</p>
+                        <p><i class="fas fa-envelope me-2"></i> info@victoryinvitations.com</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .success-section {
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+    }
+    
+    .success-card {
+        background-color: #fff;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .success-icon {
+        font-size: 5rem;
+        color: #28a745;
+    }
+    
+    .suggestion-card {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 5px;
+        height: 100%;
+    }
+    
+    .suggestion-card i {
+        font-size: 2rem;
+        color: var(--primary-color);
+        margin-bottom: 10px;
+    }
+    
+    .contact-info {
+        color: #666;
+    }
+</style>
+{% endblock %}

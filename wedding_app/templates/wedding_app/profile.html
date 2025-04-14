@@ -1,0 +1,443 @@
+{% extends 'wedding_app/base.html' %}
+{% load static %}
+
+{% block title %}My Profile - Victory Invitations{% endblock %}
+
+{% block content %}
+<!-- Breadcrumb -->
+<div class="container mt-4 mb-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">My Profile</li>
+        </ol>
+    </nav>
+</div>
+
+<!-- Profile Section -->
+<section class="profile-section py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Profile Sidebar -->
+            <div class="col-lg-3">
+                <div class="profile-sidebar">
+                    <div class="profile-userpic text-center">
+                        <i class="fas fa-user-circle"></i>
+                        <h5>{{ user.get_full_name }}</h5>
+                        <p>Member since {{ user.date_joined|date:"F d, Y" }}</p>
+                    </div>
+                    
+                    <div class="profile-nav">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#profile-info" data-bs-toggle="tab">
+                                    <i class="fas fa-user"></i> My Information
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#orders" data-bs-toggle="tab">
+                                    <i class="fas fa-shopping-bag"></i> Order History
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#addresses" data-bs-toggle="tab">
+                                    <i class="fas fa-map-marker-alt"></i> Addresses
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#wishlist" data-bs-toggle="tab">
+                                    <i class="fas fa-heart"></i> Wishlist
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'logout' %}">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Profile Content -->
+            <div class="col-lg-9">
+                <div class="profile-content">
+                    {% if messages %}
+                    <div class="messages mb-4">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="tab-content">
+                        <!-- Profile Info Tab -->
+                        <div class="tab-pane fade show active" id="profile-info">
+                            <div class="profile-card">
+                                <div class="card-header">
+                                    <h4>My Information</h4>
+                                </div>
+                                <div class="card-body">
+                                    <form method="post" action="{% url 'profile' %}">
+                                        {% csrf_token %}
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group mb-3">
+                                                    <label for="{{ user_form.first_name.id_for_label }}">First Name</label>
+                                                    {{ user_form.first_name }}
+                                                    {% if user_form.first_name.errors %}
+                                                    <div class="invalid-feedback d-block">
+                                                        {{ user_form.first_name.errors }}
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group mb-3">
+                                                    <label for="{{ user_form.last_name.id_for_label }}">Last Name</label>
+                                                    {{ user_form.last_name }}
+                                                    {% if user_form.last_name.errors %}
+                                                    <div class="invalid-feedback d-block">
+                                                        {{ user_form.last_name.errors }}
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group mb-3">
+                                            <label for="{{ user_form.email.id_for_label }}">Email</label>
+                                            {{ user_form.email }}
+                                            {% if user_form.email.errors %}
+                                            <div class="invalid-feedback d-block">
+                                                {{ user_form.email.errors }}
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        
+                                        <div class="form-group mb-3">
+                                            <label for="{{ profile_form.phone.id_for_label }}">Phone</label>
+                                            {{ profile_form.phone }}
+                                            {% if profile_form.phone.errors %}
+                                            <div class="invalid-feedback d-block">
+                                                {{ profile_form.phone.errors }}
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        
+                                        <div class="form-group mb-3">
+                                            <label for="{{ profile_form.address.id_for_label }}">Address</label>
+                                            {{ profile_form.address }}
+                                            {% if profile_form.address.errors %}
+                                            <div class="invalid-feedback d-block">
+                                                {{ profile_form.address.errors }}
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        
+                                        <button type="submit" class="btn btn-primary">Update Information</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Orders Tab -->
+                        <div class="tab-pane fade" id="orders">
+                            <div class="profile-card">
+                                <div class="card-header">
+                                    <h4>Order History</h4>
+                                </div>
+                                <div class="card-body">
+                                    {% if orders %}
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Order #</th>
+                                                        <th>Date</th>
+                                                        <th>Status</th>
+                                                        <th>Total</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for order in orders %}
+                                                    <tr>
+                                                        <td>{{ order.id }}</td>
+                                                        <td>{{ order.order_date|date:"M d, Y" }}</td>
+                                                        <td><span class="badge bg-{{ order.status|lower }}">{{ order.status }}</span></td>
+                                                        <td>₹{{ order.total_amount }}</td>
+                                                        <td>
+                                                            <a href="{% url 'order_confirmation' order.id %}" class="btn btn-sm btn-outline-primary">View</a>
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    {% else %}
+                                        <div class="text-center py-4">
+                                            <i class="fas fa-shopping-bag mb-3" style="font-size: 3rem; color: #ddd;"></i>
+                                            <h5>No Orders Yet</h5>
+                                            <p class="text-muted">You haven't placed any orders yet.</p>
+                                            <a href="{% url 'gallery' %}" class="btn btn-primary mt-2">Browse Designs</a>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Addresses Tab -->
+                        <div class="tab-pane fade" id="addresses">
+                            <div class="profile-card">
+                                <div class="card-header">
+                                    <h4>My Addresses</h4>
+                                </div>
+                                <div class="card-body">
+                                    {% if addresses %}
+                                        <div class="row">
+                                            {% for address in addresses %}
+                                            <div class="col-md-6 mb-4">
+                                                <div class="address-card p-3">
+                                                    <div class="address-header d-flex justify-content-between align-items-center mb-2">
+                                                        <h5 class="mb-0">{{ address.address_type }}</h5>
+                                                        {% if address.is_default %}
+                                                        <span class="badge bg-primary">Default</span>
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="address-content">
+                                                        <p class="mb-1">{{ address.full_name }}</p>
+                                                        <p class="mb-1">{{ address.address }}</p>
+                                                        <p class="mb-1">{{ address.city }}, {{ address.state }} {{ address.zip_code }}</p>
+                                                        <p class="mb-1">{{ address.country }}</p>
+                                                        <p class="mb-1">{{ address.phone }}</p>
+                                                    </div>
+                                                    <div class="address-actions mt-3">
+                                                        <a href="#" class="btn btn-sm btn-outline-primary">Edit</a>
+                                                        <a href="#" class="btn btn-sm btn-outline-danger">Delete</a>
+                                                        {% if not address.is_default %}
+                                                        <a href="#" class="btn btn-sm btn-outline-secondary">Set as Default</a>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <div class="text-center py-4">
+                                            <i class="fas fa-map-marker-alt mb-3" style="font-size: 3rem; color: #ddd;"></i>
+                                            <h5>No Addresses Added</h5>
+                                            <p class="text-muted">You haven't added any address yet.</p>
+                                            <button class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#addAddressModal">Add New Address</button>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Wishlist Tab -->
+                        <div class="tab-pane fade" id="wishlist">
+                            <div class="profile-card">
+                                <div class="card-header">
+                                    <h4>My Wishlist</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="text-center py-4">
+                                        <i class="fas fa-heart mb-3" style="font-size: 3rem; color: #ddd;"></i>
+                                        <h5>Wishlist Feature Coming Soon</h5>
+                                        <p class="text-muted">Stay tuned for our wishlist feature!</p>
+                                        <a href="{% url 'gallery' %}" class="btn btn-primary mt-2">Browse Designs</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Add Address Modal -->
+<div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addAddressModalLabel">Add New Address</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addressForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="address_type">Address Type</label>
+                                <select class="form-select" id="address_type">
+                                    <option value="Home">Home</option>
+                                    <option value="Work">Work</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="full_name">Full Name</label>
+                                <input type="text" class="form-control" id="full_name">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label for="address">Address</label>
+                        <input type="text" class="form-control" id="address">
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="city">City</label>
+                                <input type="text" class="form-control" id="city">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="state">State</label>
+                                <input type="text" class="form-control" id="state">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="country">Country</label>
+                                <input type="text" class="form-control" id="country">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="zip_code">Postal Code</label>
+                                <input type="text" class="form-control" id="zip_code">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label for="phone">Phone</label>
+                        <input type="text" class="form-control" id="phone">
+                    </div>
+                    
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="is_default">
+                        <label class="form-check-label" for="is_default">
+                            Set as default address
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Save Address</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-section {
+        min-height: 70vh;
+    }
+    
+    .profile-sidebar {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        margin-bottom: 30px;
+    }
+    
+    .profile-userpic {
+        margin-bottom: 20px;
+    }
+    
+    .profile-userpic i {
+        font-size: 5rem;
+        color: #ccc;
+        margin-bottom: 10px;
+    }
+    
+    .profile-nav .nav-link {
+        color: #555;
+        padding: 12px 20px;
+        border-radius: 5px;
+        margin-bottom: 5px;
+    }
+    
+    .profile-nav .nav-link:hover, 
+    .profile-nav .nav-link.active {
+        background-color: var(--primary-color);
+        color: #fff;
+    }
+    
+    .profile-nav .nav-link i {
+        margin-right: 10px;
+    }
+    
+    .profile-content {
+        min-height: 500px;
+    }
+    
+    .profile-card {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        margin-bottom: 30px;
+    }
+    
+    .profile-card .card-header {
+        padding: 20px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .profile-card .card-body {
+        padding: 30px;
+    }
+    
+    .address-card {
+        background-color: #f9f9f9;
+        border-radius: 5px;
+        height: 100%;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Handle tab navigation
+    $('a[data-bs-toggle="tab"]').on('click', function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    });
+    
+    // Initialize tabs
+    var hash = window.location.hash;
+    if (hash) {
+        $('.nav-link[href="' + hash + '"]').tab('show');
+    }
+    
+    // Update URL when tab changes
+    $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+        if (history.pushState) {
+            history.pushState(null, null, e.target.hash);
+        } else {
+            window.location.hash = e.target.hash;
+        }
+    });
+});
+</script>
+{% endblock %}

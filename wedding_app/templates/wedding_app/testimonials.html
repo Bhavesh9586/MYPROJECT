@@ -1,0 +1,221 @@
+{% extends 'wedding_app/base.html' %}
+{% load static %}
+
+{% block title %}Testimonials - Victory Invitations{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header">
+    <div class="container">
+        <h1 class="page-title">Client Testimonials</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Testimonials</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<!-- Testimonials Section -->
+<section class="testimonials-section py-5">
+    <div class="container">
+        {% if testimonials %}
+            <!-- Featured Testimonials -->
+            <div class="row mb-5">
+                {% for testimonial in featured_testimonials %}
+                <div class="col-md-4 mb-4">
+                    <div class="testimonial-card featured">
+                        <div class="testimonial-content">
+                            <div class="quote-mark"><i class="fas fa-quote-left"></i></div>
+                            <p>{{ testimonial.content }}</p>
+                        </div>
+                        <div class="testimonial-author">
+                            {% if testimonial.image %}
+                            <div class="author-image">
+                                <img src="{{ testimonial.image.url }}" alt="{{ testimonial.name }}">
+                            </div>
+                            {% endif %}
+                            <div class="author-info">
+                                <h5>{{ testimonial.name }}</h5>
+                                <p class="small">{{ testimonial.wedding_date }}</p>
+                                <div class="rating">
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= testimonial.rating %}
+                                        <i class="fas fa-star"></i>
+                                        {% else %}
+                                        <i class="far fa-star"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <h2 class="section-title text-center mb-4">More Happy Couples</h2>
+            
+            <!-- Regular Testimonials -->
+            <div class="row">
+                {% for testimonial in regular_testimonials %}
+                <div class="col-lg-6 mb-4">
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            <div class="quote-mark"><i class="fas fa-quote-left"></i></div>
+                            <p>{{ testimonial.content }}</p>
+                        </div>
+                        <div class="testimonial-author">
+                            {% if testimonial.image %}
+                            <div class="author-image">
+                                <img src="{{ testimonial.image.url }}" alt="{{ testimonial.name }}">
+                            </div>
+                            {% endif %}
+                            <div class="author-info">
+                                <h5>{{ testimonial.name }}</h5>
+                                <p class="small">{{ testimonial.wedding_date }}</p>
+                                <div class="rating">
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= testimonial.rating %}
+                                        <i class="fas fa-star"></i>
+                                        {% else %}
+                                        <i class="far fa-star"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state text-center py-5">
+                <i class="fas fa-comment-dots mb-3" style="font-size: 3rem; color: #ddd;"></i>
+                <h3>No Testimonials Yet</h3>
+                <p class="text-muted">Check back soon for client testimonials!</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Leave a Review -->
+<section class="leave-review-section py-5 bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h2 class="section-title">Share Your Experience</h2>
+                <p class="section-subtitle mb-4">We'd love to hear about your experience with Victory Invitations. Leave a review and help future couples make their decision.</p>
+                <a href="{% url 'contact' %}" class="btn btn-primary">Submit Your Review</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 40px 0;
+        margin-bottom: 30px;
+    }
+    
+    .page-title {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+    }
+    
+    .breadcrumb {
+        background: transparent;
+        padding: 0;
+    }
+    
+    .breadcrumb-item a {
+        color: rgba(255,255,255,0.8);
+    }
+    
+    .breadcrumb-item.active {
+        color: #fff;
+    }
+    
+    .testimonial-card {
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        height: 100%;
+        transition: transform 0.3s ease;
+    }
+    
+    .testimonial-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .testimonial-card.featured {
+        border-top: 4px solid var(--primary-color);
+    }
+    
+    .quote-mark {
+        font-size: 2rem;
+        color: var(--primary-color);
+        opacity: 0.3;
+        margin-bottom: 10px;
+    }
+    
+    .testimonial-content {
+        margin-bottom: 20px;
+    }
+    
+    .testimonial-content p {
+        font-style: italic;
+        color: #555;
+    }
+    
+    .testimonial-author {
+        display: flex;
+        align-items: center;
+    }
+    
+    .author-image {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-right: 15px;
+    }
+    
+    .author-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .author-info h5 {
+        margin-bottom: 0;
+        font-weight: 600;
+    }
+    
+    .rating {
+        color: #ffc107;
+        margin-top: 5px;
+    }
+    
+    .section-title {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 15px;
+    }
+    
+    .section-title:after {
+        content: '';
+        display: block;
+        width: 50px;
+        height: 2px;
+        background-color: var(--primary-color);
+        margin: 10px auto 0;
+    }
+</style>
+{% endblock %}

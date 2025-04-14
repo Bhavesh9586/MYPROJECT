@@ -1,0 +1,174 @@
+{% extends 'wedding_app/base.html' %}
+
+{% block title %}Victory Invitations - Beautiful Wedding Invitations{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content text-center">
+        <h1 class="display-3 mb-4">Beautiful Wedding Invitations</h1>
+        <p class="lead mb-5">Create stunning, personalized wedding invitations that capture your love story</p>
+        <div class="hero-buttons">
+            <a href="{% url 'gallery' %}" class="btn btn-primary btn-lg me-2">View Designs</a>
+            <a href="{% url 'contact' %}" class="btn btn-outline-light btn-lg">Get Started</a>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section py-5">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-4 mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <h3>Custom Designs</h3>
+                    <p>Personalized invitations that reflect your unique style and love story</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-envelope-open-text"></i>
+                    </div>
+                    <h3>Digital & Print</h3>
+                    <p>Available in both digital formats and premium print materials</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3>Easy RSVP</h3>
+                    <p>Manage your guest list with our simple yet powerful RSVP system</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section class="about-section py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <img src="/static/wedding_app/images/about-home.jpg" alt="Beautiful Wedding Invitation" class="img-fluid rounded shadow">
+            </div>
+            <div class="col-lg-6">
+                <div class="section-heading mb-4">
+                    <span class="subheading">About Us</span>
+                    <h2>Creating Beautiful Memories</h2>
+                </div>
+                <p class="mb-4">Victory Invitations has been helping couples create meaningful and beautiful wedding invitations for over a decade. We believe that your invitation sets the tone for your special day, and we're dedicated to making it perfect.</p>
+                <p class="mb-4">Our team of designers work closely with you to ensure that every detail reflects your unique love story and wedding vision.</p>
+                <a href="{% url 'about' %}" class="btn btn-primary">Learn More About Us</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Preview Section -->
+<section class="gallery-preview-section py-5">
+    <div class="container">
+        <div class="section-heading text-center mb-5">
+            <span class="subheading">Our Work</span>
+            <h2>Beautiful Invitation Designs</h2>
+            <p class="section-description">Browse through our collection of stunning wedding invitation designs</p>
+        </div>
+        
+        <div class="row gallery-items">
+            {% if gallery_images %}
+                {% for image in gallery_images %}
+                    <div class="col-md-4 mb-4">
+                        <div class="gallery-item">
+                            <img src="{{ image.image.url }}" alt="{{ image.title }}" class="img-fluid">
+                            <div class="gallery-overlay">
+                                <div class="gallery-info">
+                                    <h5>{{ image.title }}</h5>
+                                    {% if image.caption %}<p>{{ image.caption }}</p>{% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12 text-center">
+                    <p>Gallery images coming soon!</p>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'gallery' %}" class="btn btn-outline-primary">View Full Gallery</a>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="testimonials-section py-5 bg-light">
+    <div class="container">
+        <div class="section-heading text-center mb-5">
+            <span class="subheading">Testimonials</span>
+            <h2>What Our Couples Say</h2>
+            <p class="section-description">Hear from couples who have trusted us with their wedding invitations</p>
+        </div>
+        
+        <div class="row testimonials-slider">
+            {% if testimonials %}
+                {% for testimonial in testimonials %}
+                    <div class="col-md-4 mb-4">
+                        <div class="testimonial-card">
+                            <div class="testimonial-rating">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= testimonial.rating %}
+                                        <i class="fas fa-star"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="testimonial-content">
+                                <p>"{{ testimonial.content }}"</p>
+                            </div>
+                            <div class="testimonial-author">
+                                {% if testimonial.client_photo %}
+                                    <img src="{{ testimonial.client_photo.url }}" alt="{{ testimonial.client_name }}" class="testimonial-avatar">
+                                {% else %}
+                                    <div class="testimonial-avatar-placeholder">{{ testimonial.client_name|slice:":1" }}</div>
+                                {% endif %}
+                                <div class="testimonial-info">
+                                    <h5>{{ testimonial.client_name }}</h5>
+                                    {% if testimonial.wedding_date %}
+                                        <small>Wedding: {{ testimonial.wedding_date|date:"F Y" }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12 text-center">
+                    <p>Testimonials coming soon!</p>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'testimonials' %}" class="btn btn-outline-primary">Read More Reviews</a>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="cta-section py-5">
+    <div class="container text-center">
+        <h2 class="mb-4">Ready to Create Your Perfect Wedding Invitations?</h2>
+        <p class="lead mb-4">Let us help you design beautiful invitations that reflect your unique love story</p>
+        <a href="{% url 'contact' %}" class="btn btn-primary btn-lg">Contact Us Today</a>
+    </div>
+</section>
+{% endblock %}

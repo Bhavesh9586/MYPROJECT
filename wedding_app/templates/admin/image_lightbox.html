@@ -1,0 +1,166 @@
+{% extends "admin/base_site.html" %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+/* Lightbox styles */
+.lightbox-container {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    justify-content: center;
+    align-items: center;
+}
+
+.lightbox-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+}
+
+.lightbox-image {
+    max-width: 100%;
+    max-height: 90vh;
+    border: 3px solid white;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.lightbox-close {
+    position: absolute;
+    top: -30px;
+    right: 0;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.lightbox-caption {
+    color: white;
+    text-align: center;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.clickable-image {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.clickable-image:hover {
+    transform: scale(1.05);
+}
+
+/* Add zoom icon to show it's clickable */
+.image-container {
+    position: relative;
+    display: inline-block;
+}
+
+.image-container::after {
+    content: "🔍";
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    padding: 2px;
+    font-size: 12px;
+    opacity: 0.7;
+}
+</style>
+{% endblock %}
+
+{% block footer %}
+{{ block.super }}
+<!-- Lightbox container -->
+<div id="lightbox" class="lightbox-container">
+    <div class="lightbox-content">
+        <span class="lightbox-close">&times;</span>
+        <img id="lightbox-img" class="lightbox-image" src="" alt="Fullscreen Image">
+        <div id="lightbox-caption" class="lightbox-caption"></div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Create the lightbox functionality
+    var lightbox = document.getElementById('lightbox');
+    var lightboxImg = document.getElementById('lightbox-img');
+    var lightboxCaption = document.getElementById('lightbox-caption');
+    var lightboxClose = document.querySelector('.lightbox-close');
+    
+    // Find all admin images and make them clickable
+    function makeImagesClickable() {
+        // Get all admin view images
+        var adminImages = document.querySelectorAll('td img, th img, .field-display_image img, .field-display_items_preview img');
+        
+        adminImages.forEach(function(img) {
+            // Skip if already processed
+            if (img.classList.contains('clickable-image')) {
+                return;
+            }
+            
+            // Wrap in container for hover effect
+            var container = document.createElement('div');
+            container.className = 'image-container';
+            img.parentNode.insertBefore(container, img);
+            container.appendChild(img);
+            
+            // Add clickable class
+            img.classList.add('clickable-image');
+            
+            // Add click handler
+            img.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Get caption from title or nearby text content
+                var caption = img.getAttribute('title') || img.getAttribute('alt') || '';
+                var parentRow = img.closest('tr');
+                if (parentRow) {
+                    var firstCell = parentRow.querySelector('td:first-child, th:first-child');
+                    if (firstCell && !caption) {
+                        caption = firstCell.textContent.trim();
+                    }
+                }
+                
+                // Set the image source and show lightbox
+                lightboxImg.src = img.src;
+                lightboxCaption.textContent = caption;
+                lightbox.style.display = 'flex';
+            });
+        });
+    }
+    
+    // Close lightbox when clicking the X or outside the image
+    lightboxClose.addEventListener('click', function() {
+        lightbox.style.display = 'none';
+    });
+    
+    lightbox.addEventListener('click', function(e) {
+        if (e.target === lightbox) {
+            lightbox.style.display = 'none';
+        }
+    });
+    
+    // Process images on page load
+    makeImagesClickable();
+    
+    // Also process images after any AJAX content loads (for inlines and dynamic content)
+    var observer = new MutationObserver(function(mutations) {
+        makeImagesClickable();
+    });
+    
+    observer.observe(document.body, { 
+        childList: true, 
+        subtree: true 
+    });
+});
+</script>
+{% endblock %}

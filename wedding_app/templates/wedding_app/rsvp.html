@@ -1,0 +1,199 @@
+{% extends 'wedding_app/base.html' %}
+{% load static %}
+
+{% block title %}RSVP - Victory Invitations{% endblock %}
+
+{% block content %}
+<!-- RSVP Hero Section -->
+<section class="page-hero-section rsvp-hero">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content text-center">
+        <h1 class="display-4">RSVP</h1>
+        <p class="lead">Let us know if you'll be attending our wedding</p>
+    </div>
+</section>
+
+<!-- RSVP Form Section -->
+<section class="rsvp-form-section py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-body p-4 p-md-5">
+                        <div class="text-center mb-4">
+                            <h2 class="card-title">Please Respond</h2>
+                            <p class="card-subtitle">We look forward to celebrating with you!</p>
+                        </div>
+                        
+                        <form method="post" class="rsvp-form">
+                            {% csrf_token %}
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    <label for="{{ form.name.id_for_label }}" class="form-label">Your Name</label>
+                                    {{ form.name }}
+                                    {% if form.name.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.name.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="{{ form.email.id_for_label }}" class="form-label">Email Address</label>
+                                    {{ form.email }}
+                                    {% if form.email.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.email.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label d-block">Will you attend?</label>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="rsvp_status" id="attending" value="attending" {% if form.rsvp_status.value == 'attending' %}checked{% endif %}>
+                                    <label class="form-check-label" for="attending">I will attend</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="rsvp_status" id="not_attending" value="not_attending" {% if form.rsvp_status.value == 'not_attending' %}checked{% endif %}>
+                                    <label class="form-check-label" for="not_attending">I cannot attend</label>
+                                </div>
+                                {% if form.rsvp_status.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.rsvp_status.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-4 attendance-dependent">
+                                <div class="form-check">
+                                    {{ form.plus_one }}
+                                    <label class="form-check-label" for="{{ form.plus_one.id_for_label }}">
+                                        I will bring a plus one
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4 plus-one-dependent" style="display: none;">
+                                <label for="{{ form.plus_one_name.id_for_label }}" class="form-label">Guest's Name</label>
+                                {{ form.plus_one_name }}
+                            </div>
+                            
+                            <div class="mb-4 attendance-dependent">
+                                <label for="{{ form.dietary_restrictions.id_for_label }}" class="form-label">Dietary Restrictions or Special Requirements</label>
+                                {{ form.dietary_restrictions }}
+                            </div>
+                            
+                            <div class="text-center mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg">Submit RSVP</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Wedding Details Section -->
+<section class="wedding-details-section py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <div class="section-heading mb-4">
+                    <span class="subheading">Wedding Details</span>
+                    <h2>Important Information</h2>
+                </div>
+                
+                {% if wedding_details %}
+                    <div class="wedding-info">
+                        <div class="info-item">
+                            <h4><i class="fas fa-calendar-alt me-2"></i> Date & Time</h4>
+                            <p>{{ wedding_details.wedding_date|date:"F j, Y" }} at {{ wedding_details.wedding_time|time:"g:i A" }}</p>
+                        </div>
+                        
+                        <div class="info-item">
+                            <h4><i class="fas fa-map-marker-alt me-2"></i> Venue</h4>
+                            <p>{{ wedding_details.venue_name }}</p>
+                            <p>{{ wedding_details.venue_address }}</p>
+                            {% if wedding_details.venue_map_link %}
+                                <a href="{{ wedding_details.venue_map_link }}" target="_blank" class="btn btn-sm btn-outline-primary mt-2">
+                                    View Map <i class="fas fa-external-link-alt ms-1"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="info-item">
+                            <h4><i class="fas fa-question-circle me-2"></i> Questions?</h4>
+                            <p>If you have any questions or need assistance, please don't hesitate to <a href="{% url 'contact' %}">contact us</a>.</p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="wedding-info">
+                        <div class="info-item">
+                            <h4><i class="fas fa-calendar-alt me-2"></i> Date & Time</h4>
+                            <p>June 15, 2025 at 3:00 PM</p>
+                        </div>
+                        
+                        <div class="info-item">
+                            <h4><i class="fas fa-map-marker-alt me-2"></i> Venue</h4>
+                            <p>Grand Ballroom</p>
+                            <p>123 Wedding Avenue, Celebration City</p>
+                            <a href="#" target="_blank" class="btn btn-sm btn-outline-primary mt-2">
+                                View Map <i class="fas fa-external-link-alt ms-1"></i>
+                            </a>
+                        </div>
+                        
+                        <div class="info-item">
+                            <h4><i class="fas fa-question-circle me-2"></i> Questions?</h4>
+                            <p>If you have any questions or need assistance, please don't hesitate to <a href="{% url 'contact' %}">contact us</a>.</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-lg-6">
+                <div class="wedding-image">
+                    <img src="{% static 'wedding_app/images/venue.jpg' %}" alt="Wedding Venue" class="img-fluid rounded shadow-sm">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Show/hide plus one name field based on checkbox
+        $('#{{ form.plus_one.id_for_label }}').change(function() {
+            if($(this).is(':checked')) {
+                $('.plus-one-dependent').show();
+            } else {
+                $('.plus-one-dependent').hide();
+            }
+        });
+        
+        // Initialize state
+        if($('#{{ form.plus_one.id_for_label }}').is(':checked')) {
+            $('.plus-one-dependent').show();
+        }
+        
+        // Show/hide attendance dependent fields based on RSVP status
+        $('input[name="rsvp_status"]').change(function() {
+            if($(this).val() === 'attending') {
+                $('.attendance-dependent').show();
+            } else {
+                $('.attendance-dependent').hide();
+                $('.plus-one-dependent').hide();
+                $('#{{ form.plus_one.id_for_label }}').prop('checked', false);
+            }
+        });
+        
+        // Initialize state
+        if($('input[name="rsvp_status"]:checked').val() === 'not_attending') {
+            $('.attendance-dependent').hide();
+        }
+    });
+</script>
+{% endblock %}

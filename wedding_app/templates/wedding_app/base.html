@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Prince Graphics{% endblock %}</title>
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/static/wedding_app/images/favicon.ico" type="image/x-icon">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500&family=Great+Vibes&display=swap" rel="stylesheet">
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/wedding_app/css/style.css">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar py-2">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0">Prince Graphics all designs PSD Template & Canva Template available</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <div class="d-flex justify-content-end align-items-center">
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'profile' %}" class="text-reset me-3"><i class="fas fa-user me-1"></i> My Account</a>
+                            <a href="{% url 'logout' %}" class="text-reset"><i class="fas fa-sign-out-alt me-1"></i> Logout</a>
+                        {% else %}
+                            <a href="{% url 'login' %}" class="text-reset me-3"><i class="fas fa-sign-in-alt me-1"></i> Login</a>
+                            <a href="{% url 'register' %}" class="text-reset me-3"><i class="fas fa-user-plus me-1"></i> Register</a>
+                        {% endif %}
+                        <div class="language-selector ms-3">
+                            <span class="current-lang">English</span>
+                            <i class="fas fa-chevron-down ms-1 small"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Secondary Nav -->
+    <div class="secondary-nav py-2 bg-primary">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-7">
+                    <ul class="nav">
+                        <li class="nav-item"><a href="{% url 'home' %}" class="nav-link text-white">ABOUT US</a></li>
+                        <li class="nav-item"><a href="{% url 'contact' %}" class="nav-link text-white">CONTACT US</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link text-white">BLOG</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-5 text-end">
+                    <ul class="nav justify-content-end">
+                        <li class="nav-item"><a href="#" class="nav-link text-white">PRESS & MEDIA</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link text-white">SHIPPING POLICY</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link text-white">PRIVACY POLICY</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link text-white">FAQs</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header & Navigation -->
+    <header class="main-header py-3">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-3">
+                    <div class="dropdown">
+                        <button class="btn btn-dark dropdown-toggle w-100 text-start" type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-bars me-2"></i> CATEGORIES
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'gallery' %}?category=wedding-card">Wedding Card</a></li>
+                            <li><a class="dropdown-item" href="{% url 'gallery' %}?category=visiting-card">Visiting Card</a></li>
+                            <li><a class="dropdown-item" href="{% url 'gallery' %}?category=rasiya-kart">Rasiya Kart</a></li>
+                            <li><a class="dropdown-item" href="{% url 'gallery' %}?category=multi-color">Multi Color Patrika</a></li>
+                            <li><a class="dropdown-item" href="{% url 'gallery' %}?category=thankyou-sticker">Thankyou Sticker</a></li>
+                            <li><a class="dropdown-item" href="{% url 'gallery' %}?category=wedding-sticker">Wedding Sticker</a></li>
+                            <li><a class="dropdown-item" href="{% url 'gallery' %}?category=banner-sticker">Banner Sticker</a></li>
+                            <li><a class="dropdown-item" href="{% url 'gallery' %}?category=gujarati-sticker">Gujarati Sticker</a></li>
+                            <li><a class="dropdown-item" href="{% url 'gallery' %}?category=canva">Canva Design</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 text-center">
+                    <a href="{% url 'home' %}" class="navbar-brand">
+                        <img src="/static/wedding_app/images/prince-graphics-logo-actual.svg" alt="Prince Graphics" class="img-fluid" style="max-height: 70px;">
+                    </a>
+                </div>
+                <div class="col-md-3 text-end">
+                    <div class="d-flex align-items-center justify-content-end">
+                        <a href="{% url 'cart' %}" class="cart-icon me-3">
+                            <i class="fas fa-shopping-cart"></i>
+                            {% if cart_count %}
+                                <span class="badge bg-primary">{{ cart_count }}</span>
+                            {% endif %}
+                        </a>
+                        <a href="tel:+918980179454" class="btn btn-success"><i class="fas fa-phone-alt me-2"></i>+91 89801 79454</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Navigation -->
+    <nav class="main-nav py-2 border-top border-bottom">
+        <div class="container">
+            <ul class="nav justify-content-center">
+                <li class="nav-item">
+                    <a class="nav-link {% if 'wedding-card' in request.path %}active{% endif %}" href="{% url 'gallery' %}?category=wedding-card">WEDDING CARD</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'visiting-card' in request.path %}active{% endif %}" href="{% url 'gallery' %}?category=visiting-card">VISITING CARD</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'rasiya-kart' in request.path %}active{% endif %}" href="{% url 'gallery' %}?category=rasiya-kart">RASIYA KART</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'multi-color' in request.path %}active{% endif %}" href="{% url 'gallery' %}?category=multi-color">MULTI COLOR</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'testimonials' in request.path %}active{% endif %}" href="{% url 'testimonials' %}">TESTIMONIALS</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'cart' in request.path %}active{% endif %}" href="{% url 'cart' %}">CART</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        {% if messages %}
+            <div class="message-container">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer bg-dark text-light py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h5 class="text-uppercase mb-3">Prince Graphics</h5>
+                    <p class="mb-1"><i class="fas fa-map-marker-alt me-2"></i> Mahuda Treding ni Same, Dhaniyawada Road,</p>
+                    <p class="mb-1">Panthawada (B.K) - 385545</p>
+                    <p class="mb-1"><i class="fas fa-phone-alt me-2"></i> +91 89801 79454</p>
+                </div>
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h5 class="text-uppercase mb-3">Our Services</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'gallery' %}?category=wedding-card" class="text-light text-decoration-none mb-2 d-block">Wedding Card</a></li>
+                        <li><a href="{% url 'gallery' %}?category=visiting-card" class="text-light text-decoration-none mb-2 d-block">Visiting Card</a></li>
+                        <li><a href="{% url 'gallery' %}?category=rasiya-kart" class="text-light text-decoration-none mb-2 d-block">Rasiya Kart</a></li>
+                        <li><a href="{% url 'gallery' %}?category=multi-color" class="text-light text-decoration-none mb-2 d-block">Multi Color Patrika</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h5 class="text-uppercase mb-3">More Services</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'gallery' %}?category=thankyou-sticker" class="text-light text-decoration-none mb-2 d-block">Thankyou Sticker</a></li>
+                        <li><a href="{% url 'gallery' %}?category=wedding-sticker" class="text-light text-decoration-none mb-2 d-block">Wedding Sticker</a></li>
+                        <li><a href="{% url 'gallery' %}?category=banner-sticker" class="text-light text-decoration-none mb-2 d-block">Banner Sticker</a></li>
+                        <li><a href="{% url 'gallery' %}?category=gujarati-sticker" class="text-light text-decoration-none mb-2 d-block">Gujarati Sticker</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12 text-center">
+                    <p class="mb-0">&copy; 2025 Prince Graphics. All Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chat Widget -->
+    <div class="chat-widget">
+        <div class="chat-button" id="chatButton">
+            <div class="chat-bubble">
+                <p>LET'S TALK!</p>
+                <span class="status-indicator">Online</span>
+            </div>
+        </div>
+        <div class="chat-window" id="chatWindow" style="display: none;">
+            <div class="chat-header">
+                <h5>Customer Support</h5>
+                <button type="button" class="btn-close" id="closeChatBtn"></button>
+            </div>
+            <div class="chat-body" id="chatBody">
+                <div class="message system">
+                    <p>Welcome to Prince Graphics! How can we help you today?</p>
+                </div>
+            </div>
+            <div class="chat-footer">
+                <input type="text" class="form-control" placeholder="Type your message..." id="chatInput">
+                <button class="btn btn-primary" id="sendChatBtn"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="/static/wedding_app/js/main.js"></script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

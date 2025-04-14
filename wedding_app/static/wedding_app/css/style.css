@@ -1,0 +1,557 @@
+/* 
+   Victory Invitations Website Stylesheet
+   Custom styles for Victory Invitations website
+*/
+
+/* ======== General Styles ======== */
+:root {
+    --primary-color: #ffd100;  /* Yellow */
+    --primary-dark: #e6bc00;
+    --primary-light: #fff5cc;
+    --secondary-color: #333333;
+    --success-color: #4caf50;
+    --light-gray: #f8f9fa;
+    --dark-gray: #343a40;
+    --white: #fff;
+    --font-playfair: 'Playfair Display', serif;
+    --font-poppins: 'Poppins', sans-serif;
+    --font-great-vibes: 'Great Vibes', cursive;
+}
+
+body {
+    font-family: var(--font-poppins);
+    color: var(--secondary-color);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-playfair);
+    font-weight: 600;
+}
+
+.subheading {
+    font-family: var(--font-great-vibes);
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--secondary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+    color: var(--secondary-color);
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--secondary-color);
+}
+
+.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+.section-heading {
+    margin-bottom: 2rem;
+}
+
+.section-description {
+    max-width: 700px;
+    margin: 0 auto;
+    color: var(--secondary-color);
+    opacity: 0.9;
+}
+
+/* ======== Top Bar & Navigation ======== */
+.top-bar {
+    background-color: #f9f9f9;
+    font-size: 0.85rem;
+    border-bottom: 1px solid #eee;
+}
+
+.language-selector {
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.secondary-nav {
+    font-size: 0.8rem;
+}
+
+.secondary-nav .nav-link {
+    padding: 0.25rem 0.75rem !important;
+    font-weight: 500;
+}
+
+.main-header {
+    padding: 0.75rem 0;
+}
+
+.logo {
+    font-family: var(--font-playfair);
+    font-weight: 700;
+    letter-spacing: 2px;
+    font-size: 2.2rem;
+    margin: 0;
+    color: #222;
+}
+
+.btn-success {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+}
+
+.main-nav {
+    padding: 0.5rem 0;
+}
+
+.main-nav .nav-item {
+    position: relative;
+}
+
+.main-nav .nav-link {
+    color: var(--secondary-color) !important;
+    font-weight: 500;
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem !important;
+    letter-spacing: 1px;
+}
+
+.main-nav .nav-link:hover,
+.main-nav .nav-link.active {
+    color: var(--primary-color) !important;
+}
+
+.main-nav .nav-link.active::after {
+    content: '';
+    position: absolute;
+    left: 1rem;
+    right: 1rem;
+    bottom: 0;
+    height: 2px;
+    background-color: var(--primary-color);
+}
+
+/* ======== Hero Sections ======== */
+.hero-section, .page-hero-section {
+    position: relative;
+    height: 60vh;
+    max-height: 500px;
+    background-image: url('/static/wedding_app/images/hero-background.jpg');
+    background-size: cover;
+    background-position: center;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+.page-hero-section {
+    height: 30vh;
+    max-height: 250px;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-content h1 {
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+/* ======== Product Grid ======== */
+.product-filters {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.view-options {
+    display: flex;
+    align-items: center;
+}
+
+.view-options .btn {
+    padding: 0.25rem 0.5rem;
+    margin-left: 0.5rem;
+    color: #666;
+    background-color: transparent;
+    border: 1px solid #ddd;
+}
+
+.view-options .btn.active {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--secondary-color);
+}
+
+.product-card {
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.product-card:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    transform: translateY(-5px);
+}
+
+.product-image {
+    position: relative;
+    overflow: hidden;
+    height: 280px;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-image img {
+    transform: scale(1.05);
+}
+
+.product-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.product-card:hover .product-overlay {
+    opacity: 1;
+}
+
+.product-actions .btn {
+    margin: 0.25rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--white);
+    color: var(--secondary-color);
+    border: none;
+    font-size: 0.9rem;
+    padding: 0;
+    transition: all 0.2s ease;
+}
+
+.product-actions .btn:hover {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.product-info {
+    padding: 1rem;
+    text-align: center;
+}
+
+.product-title {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.product-title a {
+    color: var(--secondary-color);
+    text-decoration: none;
+}
+
+.product-title a:hover {
+    color: var(--primary-color);
+}
+
+/* ======== Chat Widget ======== */
+.chat-widget {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+}
+
+.chat-button {
+    position: relative;
+    cursor: pointer;
+}
+
+.chat-bubble {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    padding: 10px 15px;
+    border-radius: 20px;
+    display: inline-block;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    text-align: center;
+    position: relative;
+}
+
+.chat-bubble p {
+    margin: 0;
+    font-weight: 600;
+}
+
+.status-indicator {
+    font-size: 0.7rem;
+    display: block;
+    text-align: center;
+    padding-top: 2px;
+    opacity: 0.8;
+}
+
+.chat-window {
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    width: 320px;
+    background-color: var(--white);
+    border-radius: 10px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.chat-header {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-header h5 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.chat-body {
+    height: 300px;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+.message {
+    margin-bottom: 15px;
+    max-width: 80%;
+}
+
+.message.system {
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 10px;
+    align-self: flex-start;
+}
+
+.message.user {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    padding: 10px;
+    border-radius: 10px;
+    align-self: flex-end;
+    margin-left: auto;
+}
+
+.chat-footer {
+    padding: 10px;
+    border-top: 1px solid #eee;
+    display: flex;
+}
+
+.chat-footer input {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+/* ======== Footer ======== */
+footer {
+    padding: 60px 0 30px;
+}
+
+.footer-heading {
+    font-family: var(--font-playfair);
+    font-weight: 600;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.footer-heading:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 40px;
+    height: 2px;
+    background-color: var(--primary-color);
+}
+
+.footer-links li {
+    margin-bottom: 10px;
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: var(--white);
+    padding-left: 5px;
+}
+
+.contact-info li {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 10px;
+}
+
+.social-links {
+    display: flex;
+}
+
+.social-link {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: var(--white);
+    background-color: rgba(255, 255, 255, 0.1);
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.social-link:hover {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    transform: translateY(-3px);
+}
+
+/* ======== Media Queries ======== */
+@media (max-width: 991.98px) {
+    .logo {
+        font-size: 1.8rem;
+    }
+    
+    .secondary-nav .nav {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
+    
+    .main-nav .nav {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
+    
+    .main-nav .nav-link {
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .top-bar .col-md-6:first-child {
+        display: none;
+    }
+    
+    .top-bar .col-md-6:last-child {
+        text-align: center !important;
+    }
+    
+    .secondary-nav {
+        display: none;
+    }
+    
+    .main-header .col-md-3:first-child {
+        width: 40%;
+    }
+    
+    .main-header .col-md-6 {
+        width: 60%;
+    }
+    
+    .main-header .col-md-3:last-child {
+        width: 100%;
+        margin-top: 1rem;
+    }
+    
+    .logo {
+        font-size: 1.5rem;
+    }
+    
+    .product-image {
+        height: 220px;
+    }
+}
+
+/* Message Container for Django Messages */
+.message-container {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 1000;
+    max-width: 350px;
+}
+
+.alert {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Pagination Styles */
+.pagination .page-item.active .page-link {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--secondary-color);
+}
+
+.pagination .page-link {
+    color: var(--secondary-color);
+}

@@ -1,0 +1,42 @@
+{% extends 'wedding_app/base.html' %}
+{% load static %}
+
+{% block title %}Account Locked - Security Measure{% endblock %}
+
+{% block content %}
+<div class="container my-5 py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="alert alert-danger mb-4">
+                <i class="fas fa-lock fa-3x mb-3"></i>
+                <h2>Account Temporarily Locked</h2>
+                <p class="lead">For your security, access to this account has been temporarily blocked due to multiple failed login attempts.</p>
+            </div>
+            
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h3>What happened?</h3>
+                    <p>Our system detected multiple unsuccessful login attempts for your account, which could indicate someone trying to gain unauthorized access.</p>
+                    
+                    <h3>What should I do?</h3>
+                    <ul class="text-start">
+                        <li>Wait for 1 hour before trying to log in again</li>
+                        <li>Ensure you're using the correct login credentials</li>
+                        <li>If you've forgotten your password, use the password reset option when the account unlocks</li>
+                        <li>If you believe this is an error or need immediate assistance, please contact us</li>
+                    </ul>
+                    
+                    <div class="mt-4">
+                        <a href="{% url 'home' %}" class="btn btn-outline-secondary me-2">
+                            <i class="fas fa-home"></i> Return to Home
+                        </a>
+                        <a href="{% url 'contact' %}" class="btn btn-primary">
+                            <i class="fas fa-envelope"></i> Contact Support
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends 'wedding_app/base.html' %}
+
+{% block title %}RSVP Confirmation - Victory Invitations{% endblock %}
+
+{% block content %}
+<!-- Success Section -->
+<section class="success-section py-5 my-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="success-card text-center">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h2 class="mb-4">Thank You for Your RSVP!</h2>
+                    <p class="lead mb-4">Your response has been successfully submitted. We look forward to celebrating with you!</p>
+                    
+                    {% if wedding_details %}
+                        <div class="event-reminder text-start mb-4">
+                            <h4>Event Details:</h4>
+                            <p><strong>Date:</strong> {{ wedding_details.wedding_date|date:"F j, Y" }}</p>
+                            <p><strong>Time:</strong> {{ wedding_details.wedding_time|time:"g:i A" }}</p>
+                            <p><strong>Location:</strong> {{ wedding_details.venue_name }} ({{ wedding_details.venue_address }})</p>
+                        </div>
+                    {% endif %}
+                    
+                    <p>If you need to update your RSVP information, please don't hesitate to contact us.</p>
+                    
+                    <div class="mt-5">
+                        <a href="{% url 'home' %}" class="btn btn-primary me-2">Return to Home</a>
+                        <a href="{% url 'contact' %}" class="btn btn-outline-primary">Contact Us</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .success-section {
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+    }
+    
+    .success-card {
+        background-color: #fff;
+        padding: 50px;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    .success-icon {
+        color: #28a745;
+        font-size: 80px;
+        margin-bottom: 30px;
+    }
+    
+    .event-reminder {
+        background-color: var(--light-gray);
+        border-radius: 8px;
+        padding: 20px;
+        margin: 25px 0;
+    }
+    
+    .event-reminder h4 {
+        color: var(--primary-color);
+        margin-bottom: 15px;
+    }
+    
+    .event-reminder p {
+        margin-bottom: 10px;
+    }
+</style>
+{% endblock %}
